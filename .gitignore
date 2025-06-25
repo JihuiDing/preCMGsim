@@ -4,3 +4,6 @@ data/
 # Ignore Python cache and bytecode
 __pycache__/
 *.pyc
+
+# ignore macOS folder file
+.DS_Store
