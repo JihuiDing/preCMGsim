@@ -8,7 +8,6 @@ def extract_properties_from_finit(
     keywords: List[str],
     is_save: bool = False,
     save_dir: Union[str, Path] = 'results',
-    save_name: str = 'extracted',
     show_summary: bool = False
 ) -> Dict[str, np.ndarray]:
     """
@@ -77,7 +76,7 @@ def extract_properties_from_finit(
             
             if is_save:
                 # Save to numpy file
-                output_file = save_dir / f"{save_name}_{key.lower()}.npy"
+                output_file = save_dir / f"extracted_{key.lower()}.npy"
                 np.save(output_file, arr)
                 if show_summary:
                     print(f"Saved to {output_file}")

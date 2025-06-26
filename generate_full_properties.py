@@ -8,6 +8,7 @@ def generate_full_properties(
         total_cells: int = 989001,
         is_save: bool = True,
         save_dir: Union[str, Path] = 'results',
+        save_name: str = 'full',
         show_summary: bool = False
         ):
     """
@@ -63,7 +64,7 @@ def generate_full_properties(
     
         # Save the full property array
         if is_save:
-            np.save(save_dir / f'full_{key}.npy', full_property)
+            np.save(save_dir / f'{save_name}_{key}.npy', full_property)
     
         # Store in dictionary with key as name
         full_property_dict[key] = full_property
@@ -83,6 +84,6 @@ def generate_full_properties(
             print(f"Full {key} - Mean: {np.mean(full_property):.6f}")
             print(f"Full {key} - Min: {np.min(full_property):.6f}")
             print(f"Full {key} - Max: {np.max(full_property):.6f}")
-            print(f"Saved full {key} data to: {save_dir / f'full_{key}.npy'}")
+            print(f"Saved full {key} data to: {save_dir / f'{save_name}_{key}.npy'}")
     
     return full_property_dict

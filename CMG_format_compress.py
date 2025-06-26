@@ -7,6 +7,7 @@ def CMG_format_compress(
         max_line_length: int = 80,
         show_summary: bool = False,
         save_dir: str = 'results',
+        save_name: str = 'compressed'
         ):
     """
     Compress a numpy array to CMG format (N*value).
@@ -67,14 +68,14 @@ def CMG_format_compress(
     
     
     # Create output file path
-    output_file = save_dir / f"compressed_{keyword}.dat"
+    output_file = save_dir / f"{save_name}_{keyword}.dat"
     
-    # Create header
-    header = "**POR *ALL"
+    # # Create header
+    # header = "**POR *ALL"
     
     # Write compressed file
     with open(output_file, 'w') as f:
-        f.write(header + '\n')
+        # f.write(header + '\n')
         for line in compressed_lines:
             f.write(line + '\n')
     
