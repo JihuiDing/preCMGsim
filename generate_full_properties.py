@@ -9,7 +9,9 @@ def generate_full_properties(
         is_save: bool = True,
         save_dir: Union[str, Path] = 'results',
         save_name: str = 'full',
-        show_summary: bool = False
+        show_summary: bool = False,
+        is_j_reversed: bool = False,
+        grid_shape: tuple = (107, 117, 79)
         ):
     """
     Generate property data files for all cells, filling inactive cells with 0.
@@ -21,6 +23,8 @@ def generate_full_properties(
         is_save (bool): Whether to save the full property arrays to a file
         output_file (str): Path to the output property data file
         show_summary (bool): Whether to show summary statistics
+        is_j_reversed (bool): Whether to reverse the j-direction (CMG could reverse the j-direction)
+        grid_shape (tuple): Shape of the grid
     
     Returns:
         dict: Summary statistics of the generated data
@@ -62,6 +66,11 @@ def generate_full_properties(
         # Fill in property values for active cells
         full_property[property_dict['ACTID'] - 1] = property_dict[key]  # Subtract 1 because cell IDs are 1-based
     
+        if is_j_reversed:
+            full_property = full_property.reshape(grid_shape)
+            full_property = full_property[:, ::-1, :]
+            full_property = full_property.flatten()
+
         # Save the full property array
         if is_save:
             np.save(save_dir / f'{save_name}_{key}.npy', full_property)
