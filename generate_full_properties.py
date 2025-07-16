@@ -67,7 +67,7 @@ def generate_full_properties(
         full_property[property_dict['ACTID'] - 1] = property_dict[key]  # Subtract 1 because cell IDs are 1-based
     
         if is_j_reversed:
-            full_property = full_property.reshape(grid_shape)
+            full_property = full_property.reshape(grid_shape[2], grid_shape[1], grid_shape[0])
             full_property = full_property[:, ::-1, :]
             full_property = full_property.flatten()
 
