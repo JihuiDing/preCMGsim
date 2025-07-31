@@ -10,7 +10,7 @@ def generate_full_properties(
         save_dir: Union[str, Path] = 'results',
         save_name: str = 'full',
         show_summary: bool = False,
-        is_j_reversed: bool = False,
+        reverse_j: bool = False,
         grid_shape: tuple = (107, 117, 79)
         ):
     """
@@ -66,10 +66,14 @@ def generate_full_properties(
         # Fill in property values for active cells
         full_property[property_dict['ACTID'] - 1] = property_dict[key]  # Subtract 1 because cell IDs are 1-based
     
-        if is_j_reversed:
+        if reverse_j:
+            # Petrel grid (i,j,k) corresponds to 3D numpy array(k,i,j)
+            # reshape then transpose because Petrel export traverse first along i then along j
             full_property = full_property.reshape(grid_shape[2], grid_shape[1], grid_shape[0])
-            full_property = full_property[:, ::-1, :]
-            full_property = full_property.flatten()
+            full_property = np.transpose(full_property, axes=(0, 2, 1)) 
+            full_property = full_property[:, :, ::-1] # reverse j columns
+            full_property = np.transpose(full_property, axes=(0, 2, 1)) # transpose because flatten will be along rows
+            full_property = full_property.flatten() # flatten back to 1D array
 
         # Save the full property array
         if is_save:
