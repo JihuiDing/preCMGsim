@@ -90,6 +90,6 @@ def CMG_format_compress(
         print(f"{keyword} - Mean: {np.mean(array):.6f}")
         print(f"{keyword} - Min: {np.min(array):.6f}")
         print(f"{keyword} - Max: {np.max(array):.6f}")
-        print(f'Saved compressed {keyword} data to: {output_file}')
+    print(f'Saved compressed {keyword} data to: {output_file}')
 
     
