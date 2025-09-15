@@ -59,10 +59,10 @@ RESULTS SIMULATOR GEM
 1:107 1:117 41:79 1
 
 *POR	*ALL
-*include --PORO_FILE--
+*include data_properties/JD_BASECASE_187_PORO.dat
 
 *PERMI	*ALL
-*include --PERMX_FILE--
+*include data_properties/JD_BASECASE_187_PERMX.dat
 *PERMJ	*EQUALSI
 PERMK  EQUALSI * 0.1
 
@@ -250,8 +250,8 @@ ADTSC	100		*ON				**default nsteps=5
 
 ***GEOTYPE *KVAR  33*2  6*1
 **use same geomechanical parameters for all formations
-*ELASTMOD		23815246.81		** Elastic Young's modulus (kPa)
-*POISSRATIO		0.38			** Poisson's ratio
+*ELASTMOD		17907635.08		** Elastic Young's modulus (kPa)
+*POISSRATIO		0.34			** Poisson's ratio
 *COHESION		1E+10			** Cohesion for Mohr-Coulomb and Drucker-Prager materials (kPa)
 *HARDEN			0				** Hardening parameter for the linear strain hardening option (kPa).
 *FRICANGLE		28.0			** Friction angle (degrees)
@@ -260,8 +260,8 @@ ADTSC	100		*ON				**default nsteps=5
 
 **Assign the initial stress gradient distribution for 3D finite elements (kPa/m | psi/ft)
 				**strgrd_x	strgrd_y	strgrd_z	strgrd_xy	strgrd_yz	strgrd_xz (derived from OMV data)
-*STRESS3D  8324.56		4833.62		8525.96		-3023.25		0	0  **stress state of the reference block (pay attention to the sign of strgrd_xy)
-*STRESSGRAD3D	-13.779813151645133 -6.360186848354868 -11.69 3.615202121580591 0 0	**(pay attention to the sign of strgrd_xy)
+*STRESS3D  6868.354067753486		5544.6384027465165		7686.7909025		-2985.447753288805		0	0  **stress state of the reference block (pay attention to the sign of strgrd_xy)
+*STRESSGRAD3D	-10.23088244148806 -8.259117558511942 -11.45 4.447028312431296 0 0	**(pay attention to the sign of strgrd_xy)
 *GEORBLOCK 50 1 6	**reference block
 
 *PRESCBC3D	**Prescribe displacement-type boundary conditions on a nodal point of a 3D finite element
@@ -274,7 +274,7 @@ ADTSC	100		*ON				**default nsteps=5
 PRES	TEMP	GEORTYPE	YOUNG	POISSON
 STRESI  STRESJ  STRESK  STRESNORM 
 STRAINI STRAINJ STRAINK	STRAINVOL
-STRESMXP STRESMNP STRESINT PRMXDIR PRMNDIR STRESSHMX STRESNORM STRESSH
+STRESMXP STRESMNP STRESINT PRMXDIR PRMNDIR STRESSHMX STRESSH
 TSTRESMXP TSTRESMNP
 VERDSPLGEO	**Vertical displacement "up" based on geomechanics, at centre of cell
 VDISPL	**Vector of grid displacement
@@ -410,14 +410,13 @@ YLDSTATE **yield stress state with 0-4 indicators
 51 87 78   1.0  
 51 87 79   1.0  
 
-*DATE 2032 1 1
-***DATE 2040 1 1
-***DATE 2050 1 1
-***SHUTIN		1:5
-***DATE 2060 1 1
-***GCUPDATE	*TIME
-***DATE 2550 1 1
-***DATE 3050 1 1
+*DATE 2040 1 1
+*DATE 2050 1 1
+*SHUTIN		1:5
+*DATE 2060 1 1
+*GCUPDATE	*TIME
+*DATE 2550 1 1
+*DATE 3050 1 1
 
 *STOP
 

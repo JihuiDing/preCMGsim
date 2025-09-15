@@ -26,7 +26,7 @@ def generate_dat_files(
 
         # Replace each placeholder with the value from the current row
         for col_name in df_parameters.columns:
-            placeholder = f'__{col_name}__'
+            placeholder = f'--{col_name}--'
             new_content = new_content.replace(placeholder, str(row[col_name]))
 
         # Define the new filename using the 'CASEID' column
