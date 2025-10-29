@@ -260,8 +260,8 @@ ADTSC	100		*ON				**default nsteps=5
 
 **Assign the initial stress gradient distribution for 3D finite elements (kPa/m | psi/ft)
 				**strgrd_x	strgrd_y	strgrd_z	strgrd_xy	strgrd_yz	strgrd_xz (derived from OMV data)
-*STRESS3D  10406.18		6292.37		8855.74		-3644.63		0	0  **stress state of the reference block (pay attention to the sign of strgrd_xy)
-*STRESSGRAD3D	-15.5 -9.37 -13.19 5.43 0 0	**(pay attention to the sign of strgrd_xy)
+*STRESS3D  8625.68		8384.46		8855.74		-4339.12		0	0  **stress state of the reference block (pay attention to the sign of strgrd_xy)
+*STRESSGRAD3D	-12.85 -12.49 -13.19 6.46 0 0	**(pay attention to the sign of strgrd_xy)
 *GEORBLOCK 50 1 6	**reference block
 
 *PRESCBC3D	**Prescribe displacement-type boundary conditions on a nodal point of a 3D finite element
