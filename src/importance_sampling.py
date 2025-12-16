@@ -1,4 +1,5 @@
 import numpy as np
+from pathlib import Path
 
 def IS_SH_azi_SH_uniform(
     random_seed: int,
@@ -10,6 +11,9 @@ def IS_SH_azi_SH_uniform(
     proposal_SH_low: float,
     show_summary: bool = True
     ):
+
+    # set up path
+    base_path = Path('..')
 
     np.random.seed(random_seed)
     # name_prefix = '251023'
@@ -61,7 +65,7 @@ def IS_SH_azi_SH_uniform(
     importance_sampling = np.column_stack((samples_SH_azi,q_SH_azi,-samples_SH,q_SH,weights))
 
     header_string = 'SH_azi_deg,q_SH_azi,SH_MPa/km,q_SH,weights'
-    np.savetxt(f'{name_prefix}_importance_sampling.csv',importance_sampling,delimiter=',',fmt='%.4f',header=header_string,comments='')
+    np.savetxt(base_path/'results'/'sim_files'/f'{name_prefix}_importance_sampling.csv',importance_sampling,delimiter=',',fmt='%.4f',header=header_string,comments='')
     
     if show_summary:
         print('SH_azi')
