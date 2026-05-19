@@ -5,13 +5,12 @@ from typing import Union
 def generate_full_properties(
         property_dict: dict,
         property_list: list = ['PORO', 'PERMX'], 
-        total_cells: int = 989001,
+        grid_shape: tuple = (107, 117, 79),
         is_save: bool = True,
         save_dir: Union[str, Path] = 'results',
         save_name: str = 'full',
         show_summary: bool = False,
-        reverse_j: bool = False,
-        grid_shape: tuple = (107, 117, 79)
+        reverse_j: bool = False
         ):
     """
     Generate property data files for all cells, filling inactive cells with 0.
@@ -32,6 +31,8 @@ def generate_full_properties(
     # Create save directory if it doesn't exist
     save_dir = Path(save_dir)
     save_dir.mkdir(exist_ok=True)
+
+    total_cells = np.prod(grid_shape) 
     
     # Check if input property arrays exist
     if 'ACTID' not in property_dict:
