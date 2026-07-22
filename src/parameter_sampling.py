@@ -3,6 +3,7 @@ import pandas as pd
 from scipy.stats import qmc
 import sys
 import re
+from pathlib import Path
 from IPython.display import display
 
 # perform Latin Hypercube Sampling for the parameters and store the results in a CSV file
@@ -15,41 +16,49 @@ def latin_hypercube_sampling(
     param_names: list,
     lower_bounds: list,
     upper_bounds: list,
+    property_list: list,
     ref_block_top_depth: float,
     ref_block_bottom_depth: float,
     show_results: bool = True
     ):
 
-    # Load PORO and PERMX file names
-    property_file_names = np.loadtxt(property_file_names_path,delimiter=",",dtype=str)
+    # Create the output directory if it doesn't exist
+    output_file_path = Path(output_file_path)
+    output_file_path.mkdir(parents=True, exist_ok=True)
+
+    # Load property file names
+    property_file_names = np.loadtxt(property_file_names_path, delimiter=",", dtype=str)
 
     # sort the file names by the number in the name
     def extract_number(filename):
         match = re.search(r"(\d+)", filename)
         return int(match.group(1)) if match else float('inf')
 
-    poro_file_names = sorted(
-        [name for name in property_file_names if "PORO" in name.upper()],
-        key=extract_number
-    )
+    # Collect sorted file-name lists per property into a dict
+    prop_files = {}
+    for prop in property_list:
+        prop_files[prop] = sorted(
+            [name for name in property_file_names if prop.upper() in name.upper()],
+            key=extract_number
+        )
 
-    permx_file_names = sorted(
-        [name for name in property_file_names if "PERMX" in name.upper()],
-        key=extract_number
-    )
+    # Check that every property has file names
+    for prop in property_list:
+        if not prop_files[prop]:
+            print(f"Error: {prop} file names not found.")
+            sys.exit(1)
 
-    # check a few things
-    if not poro_file_names or not permx_file_names:
-        print("Error: PORO or PERMX file names not found.")
-        sys.exit(1)
+    # Check all properties have the same number of files
+    counts = {prop: len(prop_files[prop]) for prop in property_list}
+    if len(set(counts.values())) != 1:
+        raise ValueError(f"Mismatched number of files across properties: {counts}")
 
-    if len(poro_file_names) != len(permx_file_names):
-        raise ValueError(f"Number of PORO file names ({len(poro_file_names)}) does not match number of PERMX file names ({len(permx_file_names)})")
-
-    num_pairs = len(poro_file_names)
+    num_pairs = next(iter(counts.values()))
 
     if n_samples > num_pairs:
-        raise ValueError(f"Cannot sample {n_samples} unique poro/permx pairs: only {num_pairs} available.")
+        raise ValueError(
+            f"Cannot sample {n_samples} unique property sets: only {num_pairs} available."
+        )
 
     # Latin Hypercube Sampling for parameters
     sampler = qmc.LatinHypercube(d=len(param_names), seed=random_seed)
@@ -57,14 +66,11 @@ def latin_hypercube_sampling(
     sample_params = qmc.scale(sample, lower_bounds, upper_bounds)
     df_params = pd.DataFrame(sample_params, columns=param_names)
 
-    # Store poro/permx pairs
-    df_params["PORO_file"] = [str(poro_file_names[i]) for i in range(n_samples)]
-    df_params["PERMX_file"] = [str(permx_file_names[i]) for i in range(n_samples)]
-
-    # add prefix to file names
+    # Store file names for each property, with prefix
     prefix = "data_properties/"
-    df_params["PORO_file"] = df_params["PORO_file"].apply(lambda x: f"{prefix}{x}")
-    df_params["PERMX_file"] = df_params["PERMX_file"].apply(lambda x: f"{prefix}{x}")
+    for prop in property_list:
+        df_params[f"{prop}_file"] = [f"{prefix}{prop_files[prop][i]}" for i in range(n_samples)]
+
 
     # Calculate stress state parameters
     df_params['beta'] = df_params['SH_azi_deg'] - 90  # Rotate from SH to x-axis

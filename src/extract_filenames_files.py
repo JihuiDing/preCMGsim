@@ -1,7 +1,7 @@
 import numpy as np
-import os
 import re
 import shutil
+from pathlib import Path
 from tqdm import tqdm
 
 def extract_sorted_filenames(
@@ -15,11 +15,10 @@ def extract_sorted_filenames(
     Extract file names from a folder and sort them numerically.
     Returns a list of sorted file names (excluding hidden files like .DS_Store).
     """
-
-    # Check if the directory exists
-    if not os.path.exists(folder_dir):
-        print(f"Error: Directory '{folder_dir}' does not exist.")
-        return []
+    
+    # Create the save directory if it doesn't exist
+    save_dir = Path(save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
 
     # Get all files, excluding hidden files
     filenames = [
@@ -41,41 +40,6 @@ def extract_sorted_filenames(
     return filenames
 
 
-# def extract_sorted_files(
-#         folder_dir = None,
-#         save_dir = None,
-#         file_extension: str = '.FINIT',
-#         show_summary: bool = True,
-#         show_filenames: bool = False
-# ):
-#     """
-#     Extract files of a specific extension from a folder and sort them numerically.
-#     """
-
-#     # Create destination directory if it doesn't exist
-#     save_dir.mkdir(parents=True, exist_ok=True)
-
-#     filenames = []
-#     # Iterate through each simulation case folder
-#     for case_path in tqdm(folder_dir.iterdir(), desc='Extracting files'):
-#         if case_path.is_dir():
-#             for src_file in case_path.iterdir():
-#                 if src_file.is_file() and src_file.suffix.upper() == file_extension.upper():
-#                     dst_file = save_dir / src_file.name
-#                     shutil.copy2(src_file, dst_file)
-#                     filenames.append(src_file.name)
-
-#     # Sort numerically by extracted number
-#     filenames = sorted(filenames, key=extract_number)
-
-#     if show_summary:
-#         print(f"Total {file_extension} files copied: {len(filenames)}")
-
-#     if show_filenames:
-#         print("Extracted and sorted filenames:")
-#         for fname in filenames:
-#             print(fname)
-
 def extract_sorted_files(
         folder_dir=None,
         save_dir=None,
@@ -96,6 +60,7 @@ def extract_sorted_files(
     extensions = {ext.upper() for ext in file_extension}
 
     # Create destination directory if it doesn't exist
+    save_dir = Path(save_dir)
     save_dir.mkdir(parents=True, exist_ok=True)
 
     filenames = []
@@ -118,6 +83,7 @@ def extract_sorted_files(
         print("Extracted and sorted filenames:")
         for fname in filenames:
             print(fname)
+
 
 # Function to extract number inside filename
 def extract_number(filename):
