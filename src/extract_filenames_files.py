@@ -41,16 +41,59 @@ def extract_sorted_filenames(
     return filenames
 
 
+# def extract_sorted_files(
+#         folder_dir = None,
+#         save_dir = None,
+#         file_extension: str = '.FINIT',
+#         show_summary: bool = True,
+#         show_filenames: bool = False
+# ):
+#     """
+#     Extract files of a specific extension from a folder and sort them numerically.
+#     """
+
+#     # Create destination directory if it doesn't exist
+#     save_dir.mkdir(parents=True, exist_ok=True)
+
+#     filenames = []
+#     # Iterate through each simulation case folder
+#     for case_path in tqdm(folder_dir.iterdir(), desc='Extracting files'):
+#         if case_path.is_dir():
+#             for src_file in case_path.iterdir():
+#                 if src_file.is_file() and src_file.suffix.upper() == file_extension.upper():
+#                     dst_file = save_dir / src_file.name
+#                     shutil.copy2(src_file, dst_file)
+#                     filenames.append(src_file.name)
+
+#     # Sort numerically by extracted number
+#     filenames = sorted(filenames, key=extract_number)
+
+#     if show_summary:
+#         print(f"Total {file_extension} files copied: {len(filenames)}")
+
+#     if show_filenames:
+#         print("Extracted and sorted filenames:")
+#         for fname in filenames:
+#             print(fname)
+
 def extract_sorted_files(
-        folder_dir = None,
-        save_dir = None,
-        file_extension: str = '.FINIT',
+        folder_dir=None,
+        save_dir=None,
+        file_extension=('.FINIT',),
         show_summary: bool = True,
         show_filenames: bool = False
 ):
     """
-    Extract files of a specific extension from a folder and sort them numerically.
+    Extract files of one or more extensions from a folder and sort them numerically.
+
+    file_extension: a single extension string (e.g. '.FINIT') or an iterable of
+                    extensions (e.g. ['.FINIT', '.F0000']).
     """
+
+    # Normalize to an uppercase set for matching
+    if isinstance(file_extension, str):
+        file_extension = (file_extension,)
+    extensions = {ext.upper() for ext in file_extension}
 
     # Create destination directory if it doesn't exist
     save_dir.mkdir(parents=True, exist_ok=True)
@@ -60,7 +103,7 @@ def extract_sorted_files(
     for case_path in tqdm(folder_dir.iterdir(), desc='Extracting files'):
         if case_path.is_dir():
             for src_file in case_path.iterdir():
-                if src_file.is_file() and src_file.suffix.upper() == file_extension.upper():
+                if src_file.is_file() and src_file.suffix.upper() in extensions:
                     dst_file = save_dir / src_file.name
                     shutil.copy2(src_file, dst_file)
                     filenames.append(src_file.name)
@@ -69,7 +112,7 @@ def extract_sorted_files(
     filenames = sorted(filenames, key=extract_number)
 
     if show_summary:
-        print(f"Total {file_extension} files copied: {len(filenames)}")
+        print(f"Total files copied ({', '.join(sorted(extensions))}): {len(filenames)}")
 
     if show_filenames:
         print("Extracted and sorted filenames:")

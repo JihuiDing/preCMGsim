@@ -87,15 +87,29 @@ def latin_hypercube_sampling(
     df_params['tau_xy_ref'] = df_params['tau_xy_grad'] * grid_ave *(-1)
 
     # Output
-    df_params.to_csv(output_file_path/f"{name_prefix}_sampled_params_seed{random_seed}.csv", index=False,float_format='%.2f')
+    df_params.to_csv(output_file_path/f"{name_prefix}_sampled_params_seed{random_seed}.csv", index=False,float_format='%.6g')
     
+
     if show_results:
-        display(df_params.round(2))
+        # Round the values for display
+        def signif(x, sig=6):
+            if not isinstance(x, (int, float, np.integer, np.floating)):
+                return x
+            if x == 0 or not np.isfinite(x):
+                return x
+            return round(x, sig - 1 - int(np.floor(np.log10(abs(x)))))
+
+        df_display = df_params.copy()
+        num_cols = df_display.select_dtypes(include=[np.number]).columns
+        df_display[num_cols] = df_display[num_cols].map(lambda v: signif(v, 6))
+
+        display(df_display)
 
     sampling_results = {
         'random_seed': random_seed,
         'name_prefix': name_prefix,
-        'param_dataframe': df_params.round(2)
+        # 'param_dataframe': df_params.round(2)
+        'param_dataframe': df_params
     }
 
     return sampling_results
