@@ -17,8 +17,9 @@ def extract_sorted_filenames(
     """
     
     # Create the save directory if it doesn't exist
-    save_dir = Path(save_dir)
-    save_dir.mkdir(parents=True, exist_ok=True)
+    if is_save:
+        save_dir = Path(save_dir)
+        save_dir.mkdir(parents=True, exist_ok=True)
 
     # Get all files, excluding hidden files
     filenames = [

@@ -24,8 +24,9 @@ def extract_properties_from_finit(
         Dict[str, np.ndarray]: Dictionary containing the extracted property arrays
     """
     # Create save directory if it doesn't exist
-    save_dir = Path(save_dir)
-    save_dir.mkdir(exist_ok=True)
+    if is_save:
+        save_dir = Path(save_dir)
+        save_dir.mkdir(exist_ok=True)
     
     # Initialize storage for property arrays
     sections = {key: [] for key in keywords}
